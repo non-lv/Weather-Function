@@ -3,6 +3,7 @@ using Azure.Storage.Blobs;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Weather_Function.Services;
 
 [assembly: FunctionsStartup(typeof(Weather_Function.Startup))]
 namespace Weather_Function

@@ -7,6 +7,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Weather_Function.Models;
+using Weather_Function.Services;
 
 namespace Weather_Function.Functions
 {

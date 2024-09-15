@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Weather_Function.Services;
 
 namespace Weather_Function.Functions
 {

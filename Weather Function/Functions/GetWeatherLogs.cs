@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using Weather_Function.Extensions;
 using Weather_Function.Models;
+using Weather_Function.Services;
 
 namespace Weather_Function.Functions
 {

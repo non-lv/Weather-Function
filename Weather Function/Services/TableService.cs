@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Weather_Function.Models;
 
-namespace Weather_Function
+namespace Weather_Function.Services
 {
     public class TableService
     {
