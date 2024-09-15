@@ -5,7 +5,10 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
+using Weather_Function.Models;
 
 namespace Weather_Function.Functions
 {
@@ -39,8 +42,8 @@ namespace Weather_Function.Functions
                 _logger.LogError(ex, "Failed to retrieve weather logs");
                 return new InternalServerErrorResult();
             }
-
-            return new JsonResult(JsonConvert.DeserializeObject(results));
+            var wl = JsonConvert.DeserializeObject<List<WeatherLog>>(results);
+            return new JsonResult(wl.Select(x => x.ToWeatherLogResponse()));
         }
     }
 }
