@@ -1,7 +1,10 @@
 ﻿using Azure.Storage.Blobs;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using Weather_Function.Models;
 
 namespace Weather_Function
 {
@@ -15,13 +18,23 @@ namespace Weather_Function
             _serviceClient = serviceClient;
         }
 
-        public async Task UploadFileAsync(Stream file, string fileName)
+        public async Task UploadFileAsync(Stream file, string fileName, WeatherLog wl)
         {
             var containerClient = _serviceClient.GetBlobContainerClient(weatherFolder);
             await containerClient.CreateIfNotExistsAsync();
 
-            var blobClient = containerClient.GetBlobClient(fileName);
-            await blobClient.UploadAsync(file);
+            var blobClient = containerClient.GetBlobClient(fileName.ToLower());
+            if (!await blobClient.ExistsAsync())
+            {
+                await blobClient.UploadAsync(file);
+                wl.Success = true;
+                wl.Message = "Weather record saved sucessfully";
+            }
+            else
+            {
+                wl.Success = false;
+                wl.Message = "Weather record already stored";
+            }
         }
 
         public async Task<object> DownloadBlobAsJsonAsync(string name)

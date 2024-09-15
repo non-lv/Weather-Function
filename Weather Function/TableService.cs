@@ -17,27 +17,18 @@ namespace Weather_Function
             _tableServiceClient = tableServiceClient;
         }
 
-        public async Task UploadWeatherLogAsync(long timestamp, bool success)
+        public async Task UploadWeatherLogAsync(long timestamp, WeatherLog wl)
         {
             await _tableServiceClient.CreateTableIfNotExistsAsync(TableName);
             var tableClient = _tableServiceClient.GetTableClient(TableName);
 
-            var weatherLog = new WeatherLog
-            {
-                WeatherTimestamp = timestamp,
-                RowKey = timestamp.ToString(),
-                Success = success,
-                PartitionKey = "London"
-            };
-
-            tableClient.AddEntity(weatherLog);
+            tableClient.AddEntity(wl);
         }
 
-        public string GetWeatherLogsAsJson(DateTime from, DateTime to)
+        public string GetWeatherLogsAsJson(DateTimeOffset from, DateTimeOffset to)
         {
             var tableClient = _tableServiceClient.GetTableClient(TableName);
-
-            var results = tableClient.Query<WeatherLog>(e => e.WeatherTimestamp >= from.Ticks && e.WeatherTimestamp <= to.Ticks).ToList();
+            var results = tableClient.Query<WeatherLog>(e => e.TimeOfEntry >= from.ToUnixTimeSeconds() && e.TimeOfEntry <= to.ToUnixTimeSeconds()).ToList();
 
             return JsonConvert.SerializeObject(results);
         }

@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Web.Http;
 
 namespace Weather_Function.Functions
 {
@@ -25,11 +26,21 @@ namespace Weather_Function.Functions
         [FunctionName(nameof(GetWeatherLogs))]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req, ILogger log)
         {
-            DateTime from = DateTime.ParseExact(req.Query["from"], "yyMMdd-HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-            DateTime to = DateTime.ParseExact(req.Query["to"], "yyMMdd-HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            var from = DateTimeOffset.ParseExact(req.Query["from"], "yyMMdd-HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+            var to = DateTimeOffset.ParseExact(req.Query["to"], "yyMMdd-HH:mm", System.Globalization.CultureInfo.InvariantCulture);
 
-            var results = _tableService.GetWeatherLogsAsJson(from, to);
-            return new OkObjectResult(JsonConvert.SerializeObject(results));
+            string results;
+            try
+            {
+                results = _tableService.GetWeatherLogsAsJson(from, to);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve weather logs");
+                return new InternalServerErrorResult();
+            }
+
+            return new JsonResult(JsonConvert.DeserializeObject(results));
         }
     }
 }

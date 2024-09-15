@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Weather_Function.Functions
 {
@@ -22,9 +24,19 @@ namespace Weather_Function.Functions
         /// Gets weather file
         /// </summary>
         [FunctionName(nameof(GetWeather))]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = $"{nameof(GetWeather)}/{{blob}}")] HttpRequest req, long blob)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = $"{nameof(GetWeather)}/{{city}}/{{blob}}")] HttpRequest req, string city, long blob)
         {
-            var result = await _blobService.DownloadBlobAsJsonAsync(blob.ToString());
+            object result;
+            try
+            {
+                var requestString = $"{city}/{blob.ToString()}".ToLower();
+                result = await _blobService.DownloadBlobAsJsonAsync(requestString);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to retrieve blob: {blob}");
+                return new InternalServerErrorResult();
+            }
 
             if (result != null)
             {
