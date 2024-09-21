@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "WeatherApiUrl": "https://api.openweathermap.org/data/2.5/weather?q={{City}}&appid=--APIKEY--",
+    "WeatherCity": "London",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  }
+}
