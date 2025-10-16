@@ -9,7 +9,7 @@ A timed function periodically runs to check for new Weather updates from OpenWea
 Past logs of the retrieval attemps are stored in a tablea and can be retrieved.
 
 ## Function endpoints:
-* /api/GetWeather/{city}/{blobName}
+* ``/api/GetWeather/{city}/{blobName}``
   * Retrieves a specific Weather Record as Json
-* /api/GetWeatherLogs?from=yyMMdd-HH:mm&to=yyMMdd-HH:mm
+* ``/api/GetWeatherLogs?from=yyMMdd-HH:mm&to=yyMMdd-HH:mm``
   * Retrieves all stored Weather Logs from passed in time period as Json
